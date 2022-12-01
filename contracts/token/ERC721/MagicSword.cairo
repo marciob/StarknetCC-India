@@ -5,10 +5,12 @@ from starkware.cairo.common.uint256 import Uint256
 from starkware.cairo.common.math import assert_not_zero
 
 from openzeppelin.token.erc721.library import ERC721
+from IERC721 import IERC721
 from openzeppelin.introspection.erc165.library import ERC165
 from openzeppelin.access.ownable.library import Ownable
+from starkware.starknet.common.syscalls import get_contract_address, get_caller_address
 
-from contracts.token.ERC721.ERC721_Metadata_base import (
+from ERC721_Metadata_base import (
     ERC721_Metadata_initializer,
     ERC721_Metadata_tokenURI,
     ERC721_Metadata_setBaseTokenURI,
@@ -39,14 +41,12 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 
 // NFT collection contract address that will be used to attached the SBTns to
 //in this case it's Alien Stark collection
-const NFT_collection_address = 0x06377a3504b1e11c38c68e46df6d551d2a8db40f4e080a779dc84bcc65bbad0e;
+const NFT_collection_address = 0x075c4a08b9d2b232c302dc4bdbb14a2346d6f4a7c65d1f5884cf910be583f925;
 
 // Setters
 @storage_var
 func nextTokenId() -> (res: felt) {
-    return res;
 }
-
 
 //
 // Getters
@@ -155,7 +155,7 @@ func setApprovalForAll{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
 
 @external
 func transferFrom{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}(
-    _from: felt, token_id: Uint256
+    _from: felt, token_id: Uint256, nft_token_id: Uint256
 ) {
     alloc_locals;
     let (sender_address) = get_caller_address();
@@ -175,7 +175,7 @@ func transferFrom{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_pt
 
 @external
 func safeTransferFrom{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}(
-    _from: felt, to: felt, token_id: Uint256, data_len: felt, data: felt*
+    _from: felt, to: felt, token_id: Uint256, data_len: felt, data: felt*, nft_token_id: Uint256
 ) {
     alloc_locals;
     let (sender_address) = get_caller_address();
@@ -231,7 +231,7 @@ func mint{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}(
     hasSBTn.write(sender_address, token_id);
 
     //maps this SBTn to the NFT Collection ID
-    SBTnAttachedTo.write(token_id, nft_token_id)
+    SBTnAttachedTo.write(token_id, nft_token_id);
 
     return ();
 }

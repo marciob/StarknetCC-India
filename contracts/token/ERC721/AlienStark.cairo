@@ -6,6 +6,7 @@ from starkware.cairo.common.uint256 import Uint256
 from openzeppelin.token.erc721.library import ERC721
 from openzeppelin.introspection.erc165.library import ERC165
 from openzeppelin.access.ownable.library import Ownable
+from starkware.starknet.common.syscalls import get_contract_address, get_caller_address
 
 from ERC721_Metadata_base import (
     ERC721_Metadata_initializer,
